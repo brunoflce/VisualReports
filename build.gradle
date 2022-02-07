@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'io.rest-assured:rest-assured:4.5.0'
+    testImplementation 'com.aventstack:extentreports:5.0.9'
+    testImplementation 'com.aventstack:extentreports-testng-adapter:1.2.2'
+    testImplementation 'org.testng:testng:7.5'
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.1.2'
+    testImplementation 'org.apache.logging.log4j:log4j-core:2.17.0'
+    testImplementation 'org.apache.logging.log4j:log4j-api:2.17.0'
+    testImplementation 'org.slf4j:slf4j-log4j12:1.7.35'
+}
+
+test {
+    useJUnitPlatform()
+}
