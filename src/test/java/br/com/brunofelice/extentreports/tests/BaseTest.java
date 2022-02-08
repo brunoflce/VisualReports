@@ -1,9 +1,14 @@
 package br.com.brunofelice.extentreports.tests;
 
 import br.com.brunofelice.extentreports.utils.logs.Log;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
+import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.*;
+
 
 
 import java.lang.reflect.Method;
@@ -11,20 +16,34 @@ import java.lang.reflect.Method;
 import static br.com.brunofelice.extentreports.utils.extentreports.ExtentTestManager.startTest;
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 
 public class BaseTest {
 
-    @Test(testName ="GET scenario", description = "GET scenario test.")
+    @BeforeTest
+    public void beforeTest() {
+        RestAssured.baseURI = "https://gorest.co.in/public/v2/";
+    }
+
+    @Test(testName ="GET scenario", description = "GET scenario test.", groups = "gettests")
     public void testGet(Method method) {
+
         startTest(method.getName(), "GET scenario test.");
         Log.info("Testing GET method");
-        get("https://gorest.co.in/public/v2/users").
+        get("users?page=1").
         then().
-                statusCode(HttpStatus.SC_OK);
+                assertThat().
+                body(matchesJsonSchemaInClasspath("schema.json")).
+                statusCode(HttpStatus.SC_OK).
+                body("[7].name", equalTo("Jaya Mehrotra")).
+
+
     }
 
     @Test(testName = "POST scenario", description = "POST scenario with DELETE method")
+
     public void testPost(Method method) {
 
         String jsonBody = "{" +
@@ -44,10 +63,11 @@ public class BaseTest {
                 and().
                 body(jsonBody).
         when().
-                post("https://gorest.co.in//public/v2/users").
+                post("users").
         then().
                 assertThat().
                 statusCode(HttpStatus.SC_CREATED);
+
     }
 }
 
